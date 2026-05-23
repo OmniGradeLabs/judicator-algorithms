@@ -10,7 +10,7 @@ VENV_DIR="$SCRIPT_DIR/.venv"
 UIED_ROOT="$(cd "$REPO_ROOT/../UIED" 2>/dev/null && pwd)" || true
 CPP_REPS=5
 
-# ── Parse args ──────────────────────────────────────────────────────────────
+# Parse args
 while [[ $# -gt 0 ]]; do
     case $1 in
         --reps) CPP_REPS="$2"; shift 2 ;;
@@ -21,16 +21,16 @@ done
 RED='\033[0;31m'; GRN='\033[0;32m'; YLW='\033[1;33m'
 CYN='\033[0;36m'; BLD='\033[1m'; RST='\033[0m'
 
-bar() { printf '%*s' "$1" '' | tr ' ' '─'; }
+bar() { printf '%*s' "$1" '' | tr ' ' '='; }
 
-# ── Step 1: build C++ if needed ─────────────────────────────────────────────
+# Step 1: build C++ if needed
 echo -e "\n${BLD}[1/3] Building C++ targets...${RST}"
 cmake -S "$REPO_ROOT" -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=OFF \
     --log-level=ERROR -Wno-dev 2>/dev/null
 cmake --build "$BUILD_DIR" --parallel 2>/dev/null
 echo -e "    ${GRN}✓ Build OK${RST}"
 
-# ── Step 2: run C++ benchmark, capture JSON output ──────────────────────────
+# Step 2: run C++ benchmark, capture JSON output
 echo -e "\n${BLD}[2/3] Running C++ benchmark (${CPP_REPS} repetitions)...${RST}"
 # Run from build/ so the benchmark can resolve ../assets/test_ui.png
 CPP_JSON=$(cd "$BUILD_DIR" && ./run_benchmark \
@@ -57,7 +57,7 @@ CPP_P2=$(parse_cpp "BM_Phase2_FullDetection")
 CPP_FP=$(parse_cpp "BM_FullPipeline")
 echo -e "    ${GRN}✓ C++ done${RST}  (Phase1=${CPP_P1}ms  Phase2=${CPP_P2}ms  Full=${CPP_FP}ms)"
 
-# ── Step 3: run Python benchmark ────────────────────────────────────────────
+# Step 3: run Python benchmark
 echo -e "\n${BLD}[3/3] Running Python benchmark...${RST}"
 
 if [[ -z "${UIED_ROOT:-}" || ! -d "$UIED_ROOT" ]]; then
@@ -86,7 +86,7 @@ else
     fi
 fi
 
-# ── Print comparison table ───────────────────────────────────────────────────
+# Print comparison table
 speedup() {
     local py=$1 cpp=$2
     awk -v p="$py" -v c="$cpp" 'BEGIN {
