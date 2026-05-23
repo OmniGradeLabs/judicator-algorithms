@@ -9,7 +9,6 @@ find_package(benchmark REQUIRED)
 
 include_directories(include)
 
-# --- Main executable: full Phase 1 + Phase 2 pipeline ---------------------
 add_executable(run_main
     src/main.cpp
     src/uied_phase1.cpp
@@ -17,10 +16,10 @@ add_executable(run_main
 )
 target_link_libraries(run_main ${OpenCV_LIBS})
 
-# --- Benchmark executable -------------------------------------------------
 add_executable(run_benchmark
     src/benchmark.cpp
     src/uied_phase1.cpp
     src/uied_phase2.cpp
 )
 target_link_libraries(run_benchmark ${OpenCV_LIBS} benchmark::benchmark pthread)
+
