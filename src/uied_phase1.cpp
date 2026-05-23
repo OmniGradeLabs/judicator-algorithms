@@ -16,8 +16,9 @@ Mat process_binarization(const Mat& input_img, int grad_min) {
 
     dst1 = cv::abs(dst1);
     dst2 = cv::abs(dst2);
-    dst1.add(dst2).convertTo(gradient, CV_8U);
+    Mat sum = dst1 + dst2;
 
+    sum.convertTo(gradient, CV_8U);
     threshold(gradient, binary, grad_min, 255, THRESH_BINARY);
 
     Mat morph_kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
